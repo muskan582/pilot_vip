@@ -1,19 +1,23 @@
-
 const TelegramBot = require("node-telegram-bot-api");
 
-// 👉 Your Bot Token
-const token = "YOUR_BOT_TOKEN_HERE";
+// ✅ TOKEN FROM ENV (MANDATORY)
+const token = process.env.BOT_TOKEN;
 
-// 👉 Create bot
+if (!token) {
+  console.error("❌ BOT_TOKEN missing");
+  process.exit(1);
+}
+
+// ✅ Create bot with polling
 const bot = new TelegramBot(token, { polling: true });
 
 console.log("🤖 PILOT BET VIP SIGNALS Bot Running...");
 
-// 👉 Channel
+// 👉 Channel link
 const CHANNEL_URL = "https://t.me/+Q4NY7aS-PEoxNDZl";
 
 // /start command
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
 
   const welcomeText = `
@@ -33,35 +37,29 @@ We focus on <b>strategy, patience & consistency.</b>
 Tap below to join the VIP Channel 👇
 `;
 
-  const options = {
+  await bot.sendMessage(chatId, welcomeText, {
     parse_mode: "HTML",
     reply_markup: {
       inline_keyboard: [
-        [
-          { text: "📢 Join VIP Channel", url: CHANNEL_URL }
-        ],
-        [
-          { text: "I Joined 👍", callback_data: "joined" }
-        ]
+        [{ text: "📢 Join VIP Channel", url: CHANNEL_URL }],
+        [{ text: "I Joined 👍", callback_data: "joined" }]
       ]
     }
-  };
+  });
 
-  bot.sendMessage(chatId, welcomeText, options);
-
-  bot.sendMessage(
+  await bot.sendMessage(
     chatId,
     `⚠️ <b>Disclaimer:</b>\nAll content is for educational purposes only.`,
     { parse_mode: "HTML" }
   );
 });
 
-// Button Action
-bot.on("callback_query", (query) => {
+// Button handler
+bot.on("callback_query", async (query) => {
   const chatId = query.message.chat.id;
 
   if (query.data === "joined") {
-    bot.sendMessage(
+    await bot.sendMessage(
       chatId,
       "❤️ Thanks for joining PILOT BET VIP SIGNALS!\nFasten your seatbelt & stay tuned ✈️📈"
     );
