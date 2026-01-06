@@ -1,0 +1,12 @@
+{
+  "name": "pilot-bet-vip-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for Pilot Bet VIP Signals",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
